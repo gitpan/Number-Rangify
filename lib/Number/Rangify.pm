@@ -1,31 +1,22 @@
-package Number::Rangify;
-
+use 5.008;
 use strict;
 use warnings;
+
+package Number::Rangify;
+our $VERSION = '1.100860';
+# ABSTRACT: Optimize a list of values into ranges
 use Set::IntRange;
-
-
-our $VERSION = '0.01';
-
-
-use base 'Exporter';
-
-
-our %EXPORT_TAGS = (
-    util  => [ qw(rangify) ],
-);
-
-
+use Exporter qw(import);
+our %EXPORT_TAGS = (util => [qw(rangify)],);
 our @EXPORT_OK = @{ $EXPORT_TAGS{all} = [ map { @$_ } values %EXPORT_TAGS ] };
 
-
 sub rangify {
+
     # each @range element is a [ $lower, $upper ] array ref.
     my @ranges;
-
-    VAL: for my $val (sort { $a <=> $b } @_) {
-
+  VAL: for my $val (sort { $a <=> $b } @_) {
         for my $range (@ranges) {
+
             # is the value already in the range?
             next VAL if $val >= $range->[0] && $val <= $range->[1];
 
@@ -42,20 +33,24 @@ sub rangify {
         # still here? make a new range
         push @ranges, [ $val, $val ];
     }
-
     my @range_obj = map { Set::IntRange->new(@$_) } @ranges;
     wantarray ? @range_obj : \@range_obj;
 }
-
-
 1;
 
 
 __END__
+=pod
+
+=for stopwords rangify
 
 =head1 NAME
 
-Number::Rangify - optimize a list of values into ranges
+Number::Rangify - Optimize a list of values into ranges
+
+=head1 VERSION
+
+version 1.100860
 
 =head1 SYNOPSIS
 
@@ -72,9 +67,9 @@ Number::Rangify - optimize a list of values into ranges
 This module provides a function that can optimize a list of values into range
 objects.
 
-=over 4
+=head1 FUNCTIONS
 
-=item rangify
+=head2 rangify
 
 Takes a list of values and makes them into ranges.
 
@@ -95,41 +90,39 @@ of L<Set::IntRange> objects.
 
 Duplicate values in the input list are ignored.
 
-=back
+=head1 INSTALLATION
 
-=head1 TAGS
-
-If you talk about this module in blogs, on del.icio.us or anywhere else,
-please use the C<numberrangify> tag.
+See perlmodinstall for information and options on installing Perl modules.
 
 =head1 BUGS AND LIMITATIONS
 
 No bugs have been reported.
 
-Please report any bugs or feature requests to
-C<bug-number-rangify-@rt.cpan.org>, or through the web interface at
-L<http://rt.cpan.org>.
-
-=head1 INSTALLATION
-
-See perlmodinstall for information and options on installing Perl modules.
+Please report any bugs or feature requests through the web interface at
+L<http://rt.cpan.org/Public/Dist/Display.html?Name=Number-Rangify>.
 
 =head1 AVAILABILITY
 
 The latest version of this module is available from the Comprehensive Perl
-Archive Network (CPAN). Visit <http://www.perl.com/CPAN/> to find a CPAN
-site near you. Or see <http://www.perl.com/CPAN/authors/id/M/MA/MARCEL/>.
+Archive Network (CPAN). Visit L<http://www.perl.com/CPAN/> to find a CPAN
+site near you, or see
+L<http://search.cpan.org/dist/Number-Rangify/>.
+
+The development version lives at
+L<http://github.com/hanekomu/Number-Rangify/>.
+Instead of sending patches, please fork this project using the standard git
+and github infrastructure.
 
 =head1 AUTHOR
 
-Marcel GrE<uuml>nauer, C<< <marcel@cpan.org> >>
+  Marcel Gruenauer <marcel@cpan.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-Copyright 2007 by Marcel GrE<uuml>nauer
+This software is copyright (c) 2007 by Marcel Gruenauer.
 
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
+This is free software; you can redistribute it and/or modify it under
+the same terms as the Perl 5 programming language system itself.
 
 =cut
 
